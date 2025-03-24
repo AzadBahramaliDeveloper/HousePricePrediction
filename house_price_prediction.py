@@ -1,13 +1,14 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, accuracy_score, classification_report
 from sklearn.model_selection import RandomizedSearchCV
 import joblib
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import PolynomialFeatures
 
 # Load the data
 train_df = pd.read_csv("data/train.csv")
@@ -75,7 +76,7 @@ test_df.drop('ADDRESS', axis=1, inplace=True)
 # Apply the same scaling transformation to the test set (use the same scaler from the training set)
 test_df[numerical_columns] = scaler.transform(test_df[numerical_columns])
 
-# Initialize the model (you can choose either LinearRegression or RandomForestRegressor)
+# Initialize a RandomForestRegressor for reproducibility
 model = RandomForestRegressor(n_estimators=100, random_state=42)
 
 # Train the model
@@ -135,3 +136,55 @@ feature_importances = model.feature_importances_
 sorted_idx = feature_importances.argsort()
 for index in sorted_idx:
     print(f"{X.columns[index]}: {feature_importances[index]}")
+
+# Define the model
+model = LogisticRegression()
+
+# Define the hyperparameters to tune
+param_grid = {
+    'C': [0.1, 1, 10],  # Regularization strength
+    'solver': ['liblinear', 'saga'],  # Solver options
+    'max_iter': [100, 200, 500]  # Number of iterations
+}
+
+# Set up the grid search
+grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, n_jobs=-1)
+
+# Fit the grid search to the data
+grid_search.fit(X_train, y_train)
+
+# Print the best parameters
+print("Best parameters found: ", grid_search.best_params_)
+
+# Train the model with the best parameters
+best_model = grid_search.best_estimator_
+
+# Predict on the test set
+y_pred = best_model.predict(X_test)
+
+# Evaluate the model
+print(f'Accuracy: {accuracy_score(y_test, y_pred)}')
+print(f'Classification Report:\n{classification_report(y_test, y_pred)}')
+
+
+# Create polynomial features
+poly = PolynomialFeatures(degree=2, include_bias=False)
+X_poly = poly.fit_transform(X_train)
+
+# Standardize the new features
+scaler = StandardScaler()
+X_poly_scaled = scaler.fit_transform(X_poly)
+
+# Split the new data into train and test
+X_train_poly, X_test_poly, y_train, y_test = train_test_split(X_poly_scaled, y, test_size=0.2, random_state=42)
+
+# Train a new model with polynomial features
+model_poly = LogisticRegression(max_iter=200)
+model_poly.fit(X_train_poly, y_train)
+
+# Predict on the test set
+y_pred_poly = model_poly.predict(X_test_poly)
+
+# Evaluate the model
+print(f'Accuracy with Polynomial Features: {accuracy_score(y_test, y_pred_poly)}')
+print(f'Classification Report with Polynomial Features:\n{classification_report(y_test, y_pred_poly)}')
