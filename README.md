@@ -64,3 +64,54 @@ Thanks to the libraries and tools used in this project:
 - **pandas** for data manipulation
 - **scikit-learn** for machine learning algorithms and model evaluation
 - **matplotlib** for visualizing the model performance
+
+---
+# For VG
+
+## 1. Data Preparation
+
+This section remains unchanged from the **Godkänd** documentation. It describes how the data was loaded, cleaned, and prepared for modeling. Missing values were handled, categorical variables were one-hot encoded, and numerical features were standardized using **StandardScaler**.
+
+---
+
+## 2. Model Selection
+
+Initially, the **Random Forest Regressor** was chosen as the model due to its robustness and ability to handle both numerical and categorical features. It is an ensemble model that combines multiple decision trees to improve prediction accuracy.
+
+For the **Väl Godkänd (VG)** level, an additional approach was explored using **Logistic Regression**. Logistic Regression was chosen for its computational efficiency and interpretability. This model was further enhanced by creating **polynomial features** of degree 2, which were used to capture non-linear relationships between the variables. The creation of polynomial features allowed the model to better handle complex interactions in the data.
+
+Additionally, **hyperparameter tuning** was performed on the Logistic Regression model using **GridSearchCV** to identify the best set of hyperparameters. The hyperparameters tuned included:
+- `C` (regularization strength)
+- `solver` (optimization algorithm)
+- `max_iter` (number of iterations)
+
+These hyperparameters were tuned using **cross-validation** to ensure the model’s generalization capability. The best parameters were selected, and a new Logistic Regression model was trained with the optimal configuration.
+
+---
+
+## 3. Model Performance
+
+For the **Väl Godkänd** level, **Logistic Regression** with **polynomial features** was tested alongside the Random Forest model. The performance of the Logistic Regression model was evaluated using **accuracy** and **classification report**.
+
+The following steps were performed to evaluate the models:
+- The models were evaluated using **accuracy** to understand the overall correctness of predictions.
+- A **classification report** was generated to assess precision, recall, F1-score, and support for each class (price range categories).
+
+It was found that the Logistic Regression model with polynomial features provided competitive accuracy while being computationally more efficient and interpretable compared to Random Forest.
+
+---
+
+## 4. Hyperparameter Tuning
+
+For the **Väl Godkänd (VG)** level, **GridSearchCV** was used to tune the hyperparameters of the Logistic Regression model. The following parameters were optimized:
+- `C` (regularization strength)
+- `solver` (optimization algorithm)
+- `max_iter` (number of iterations)
+
+The tuning process was carried out using **5-fold cross-validation** to select the best hyperparameters and prevent overfitting. The best parameters were then used to train the final model, which was then evaluated on the test data.
+
+---
+
+## 5. Polynomial Feature Transformation
+
+To improve model performance, **polynomial features** of degree 2 were created. These features captured non-linear relationships between the variables, which could improve the model's predictive power. The polynomial features
