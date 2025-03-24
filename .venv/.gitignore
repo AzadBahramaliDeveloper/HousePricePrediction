@@ -1,0 +1,51 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore metadata and build files
+build/
+dist/
+*.egg-info/
+metadata*.py
+wheel*.py
+
+# Ignore dataset files if needed
+*.csv  # Remove this if you want to track dataset changes
+
+# Ignore backup and temporary files
+*~
+.swp
+.swo
+.bak
+.tmp
+
+# Ignore environment files (security reasons)
+.env
+.env.local
+.env.*.local
+
+# Ignore virtual environments
+venv/
+
+*.f2py_f2cmap
+
+# Ignore IDE files
+.idea/
+*.iml
+
+# Ignore Python virtual environments
+.venv/
+
+
+# Ignore model file if you don't want to track it in Git
+house_price_model.pkl
+
+*.pyd
+
+# Ignore other common files (logs, temp files, etc.)
+*.log
+*.tmp
+
+/shelf/
+/workspace.xml
