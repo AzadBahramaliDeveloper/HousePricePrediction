@@ -34,8 +34,12 @@ venv/
 .idea/
 *.iml
 
-# Ignore virtual environment
+# Ignore Python virtual environments
 .venv/
+
+
+# Ignore model file if you don't want to track it in Git
+house_price_model.pkl
 
 *.pyd
 
